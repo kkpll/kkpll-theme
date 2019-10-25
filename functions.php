@@ -442,8 +442,91 @@ function pager( $query = null,　$prev_text, $next_text ){
 
 }
 
+/*
+ *
+ * フロントエンド用テンプレート
+ *
+ */
 
+$loader = new \Twig\Loader\FilesystemLoader( get_template_directory().'/template' );
+$options = array(
+    'strict_variables' => false,
+    'debug' => false,
+    'cache'=> false
+);
+$twig = new \Twig\Environment($loader,$options);
 
+$function = new \Twig\TwigFunction( 'wp_head', 'wp_head' );
+$twig->addFunction( $function );
+$function = new \Twig\TwigFunction( 'wp_footer', 'wp_footer' );
+$twig->addFunction( $function );
+
+/*
+ *
+ * フロントエンド用コントローラー
+ *
+ */
+
+add_action( 'template_redirect', 'front_controller' );
+function front_controller() {
+
+	$queried = get_queried_object();
+    // var_dump($queried);
+
+    $template   = 'index';
+    $head_title = '';
+    $h1_title   = '';
+    $h2_title   = '';
+    $posts      = array();
+
+	if ( is_home() ) {
+
+        $template = 'index';
+        $head_title = 'トップページ';
+        $posts      = array(
+                array('title' => '記事１', 'date' => '20190101'),
+                array('title' => '記事２', 'date' => '20190102'),
+        );
+
+	} else if ( is_category() || is_tag() || is_tax() ) {
+
+        $template = 'archive';
+        $head_title = $queried->name;
+        $h1_title = $queried->name;
+
+    } else if ( is_post_type_archive() ) {
+
+        $template = 'archive';
+        $head_title = $queried->label;
+        $h1_title = $queried->label;
+
+	} else if ( is_single() ) {
+
+	} else if ( is_page() ) {
+        $template = 'index';
+        $head_title = $queried->post_title;
+        $h1_title = '固定ページ';
+        $h2_title = $queried->post_title;
+    } else if ( is_search() ) {
+
+    } else if ( is_404() ) {
+        $template = '404';
+        $head_title = '記事が見つかりませんでした';
+    } else if ( is_author() || is_date() ) {
+        exit();
+    }
+
+    global $twig;
+    echo $twig->render( $template.'.html', array(
+        'head_title'=> $head_title,
+        'h1_title'  => $head_title,
+        'h2_title'  => $h2_title,
+        'posts'     => $posts,
+        )
+    );
+    exit();
+
+}
 
 ////記事表示数を変更するときは以下のように
 // function my_home_category( $query ) {

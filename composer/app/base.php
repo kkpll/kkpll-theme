@@ -10,8 +10,10 @@ class Base{
 
     public function __construct(){
 
-        $this->plugin_path   = BASE_DIR . "/composer";
-        $this->plugin_url    = BASE_DIR_URI . "/composer";
+        $this->theme_path     = get_template_directory();
+        $this->theme_url      = get_template_directory_uri();
+        $this->plugin_path   = $this->theme_path . "/composer";
+        $this->plugin_url    = $this->theme_url . "/composer";
         $this->plugin_prefix = 'fnsk';
 
     }
