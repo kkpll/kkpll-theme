@@ -1,0 +1,9 @@
+<div class="wrap">
+    <h1 class="wp-heading-inline">カスタム投稿ページ</h1>
+    <a href="#" class="page-title-action">新規追加</a>
+    <form method="post" action="options.php">
+        {{ settings_fields( 'fnsk_cpt_group' ) }}
+        {{ do_settings_sections( 'fnsk_cpt_page' ) }}
+        {{ submit_button() }}
+    </form>
+</div>
