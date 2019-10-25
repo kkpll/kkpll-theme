@@ -68,7 +68,7 @@ class Redirect extends Base{
     }
 
     public function admin_enqueue_scripts(){
-        wp_enqueue_script( 'redirect.js', $this->plugin_url . 'assets/js/admin/redirect.js', array( 'jquery' ), filemtime( $this->plugin_path . 'assets/js/admin/redirect.js' ), true );
+        wp_enqueue_script( 'redirect.js', $this->plugin_url . '/assets/js/admin/redirect.js', array( 'jquery' ), filemtime( $this->plugin_path . '/assets/js/admin/redirect.js' ), true );
     }
 
 
