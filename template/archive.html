@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}{{ head_title }}{% endblock %}
+{% block content %}
+    <h2>{{ h2_title }}</h2>
+    {{ pager( query ) }}
+{% endblock %}
+{% block footer %}
+    {{ parent() }}
+    {% include 'footer.html' with { 'title': head_title, 'posts' : posts } %}
+{% endblock %}

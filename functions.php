@@ -389,7 +389,7 @@ add_filter( 'excerpt_length', 'twpp_change_excerpt_length', 999 );
  * ページ送り
  *
  */
-function pager( $query = null,　$prev_text, $next_text ){
+function pager( $query = null, $prev_text=null, $next_text=null ){
 
     global $wp_query;
 
@@ -402,8 +402,8 @@ function pager( $query = null,　$prev_text, $next_text ){
         'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
         'current' => max( 1, get_query_var('paged') ),
         'total' => $current_query->max_num_pages,
-        'prev_text' => $prev_text,
-        'next_text' => $next_text,
+        'prev_text' => $prev_text ? $prev_text : "前のページへ",
+        'next_text' => $next_text ? $next_text : "次のページへ",
     );
 
     $pager = paginate_links( $args );
@@ -458,8 +458,14 @@ $twig = new \Twig\Environment($loader,$options);
 
 $function = new \Twig\TwigFunction( 'wp_head', 'wp_head' );
 $twig->addFunction( $function );
+
 $function = new \Twig\TwigFunction( 'wp_footer', 'wp_footer' );
 $twig->addFunction( $function );
+
+$function = new \Twig\TwigFunction( 'pager', 'pager' );
+$twig->addFunction( $function );
+
+
 
 /*
  *
@@ -473,11 +479,17 @@ function front_controller() {
 	$queried = get_queried_object();
     // var_dump($queried);
 
+    //テンプレートに渡す各種データ
     $template   = 'index';
     $head_title = '';
     $h1_title   = '';
     $h2_title   = '';
     $posts      = array();
+    $query      = null;
+
+    //パンくずリスト
+    $breadcrumb = array();
+    array_push( $breadcrumb, array( 'name' => 'HOME', 'link' => home_url()) );
 
 	if ( is_home() ) {
 
@@ -490,17 +502,37 @@ function front_controller() {
 
 	} else if ( is_category() || is_tag() || is_tax() ) {
 
+        //カスタム投稿タイプに登録されているタクソノミーだったらカスタム投稿一覧へのリンクをパンくずリストに入れる処理
+        $taxonomy = get_taxonomy( $queried->taxonomy );
+        $registrated_post_type = $taxonomy->object_type[0];
+        if( $registrated_post_type !== 'post' ){
+            array_push( $breadcrumb, array( 'name' => get_post_type_object( $registrated_post_type )->labels->singular_name, 'link' => home_url('/' . $registrated_post_type . '/')) );
+        }
+
+        array_push( $breadcrumb, array( 'name' => $queried->name."一覧" ) );
+
         $template = 'archive';
         $head_title = $queried->name;
         $h1_title = $queried->name;
+
+        global $wp_query;
+        $query = $wp_query;
+
 
     } else if ( is_post_type_archive() ) {
 
         $template = 'archive';
         $head_title = $queried->label;
         $h1_title = $queried->label;
+        array_push( $breadcrumb, array( 'name' => $queried->label."一覧" ) );
 
 	} else if ( is_single() ) {
+
+        $post_type = $queried->post_type;
+        if( $post_type !=='post' ){
+            array_push( $breadcrumb, array( 'name' => get_post_type_object( $post_type )->labels->singular_name, 'link' => home_url('/' . $post_type . '/')) );
+        }
+        array_push( $breadcrumb, array( 'name' => $queried->post_title ) );
 
 	} else if ( is_page() ) {
         $template = 'index';
@@ -516,12 +548,14 @@ function front_controller() {
         exit();
     }
 
+    //テンプレートにデータを渡して書き出す
     global $twig;
     echo $twig->render( $template.'.html', array(
         'head_title'=> $head_title,
-        'h1_title'  => $head_title,
+        'h1_title'  => $h1_title,
         'h2_title'  => $h2_title,
         'posts'     => $posts,
+        'query'     => $query,
         )
     );
     exit();
