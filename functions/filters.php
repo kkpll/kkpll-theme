@@ -1,22 +1,5 @@
 <?php
 
-/*
- *
- * 抜粋文の調整
- *
- */
-
-
-function my_excerpt_more($post) {
-    return '';
-}
-add_filter('excerpt_more', 'my_excerpt_more');
-
-function twpp_change_excerpt_length( $length ) {
-  return 100;
-}
-add_filter( 'excerpt_length', 'twpp_change_excerpt_length', 999 );
-
 
 /*
  *

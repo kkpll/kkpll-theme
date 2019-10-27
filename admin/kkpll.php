@@ -15,8 +15,8 @@ if( !defined( 'ABSPATH') ){
 define('BASE_DIR', get_template_directory());
 define('BASE_DIR_URI', get_template_directory_uri());
 
-if( file_exists( BASE_DIR . '/composer/vendor/autoload.php' ) ){
-    require_once BASE_DIR . '/composer/vendor/autoload.php';
+if( file_exists( BASE_DIR . '/admin/vendor/autoload.php' ) ){
+    require_once BASE_DIR . '/admin/vendor/autoload.php';
 }
 
 /*

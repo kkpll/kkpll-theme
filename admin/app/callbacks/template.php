@@ -21,7 +21,7 @@ class Template extends Base{
         // );
         // $this->template = new \Twig\Environment( $loader, $options );
 
-        $loader = new \Twig\Loader\FilesystemLoader( get_template_directory().'/composer/template' );
+        $loader = new \Twig\Loader\FilesystemLoader( get_template_directory().'/admin/template' );
         $options = array(
             'strict_variables' => false,
             'debug' => false,

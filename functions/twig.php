@@ -22,22 +22,3 @@ $twig->addFunction( $function );
 
 $function = new \Twig\TwigFunction( 'pager', 'pager' );
 $twig->addFunction( $function );
-
-
-/*
- *
- * アイキャッチ設定
- *
- */
-
-add_theme_support('post-thumbnails');
-set_post_thumbnail_size( 400, 300, true );
-
-
-/*
- *
- * 抜粋文
- *
- */
-
-add_post_type_support( 'page', 'excerpt' );
