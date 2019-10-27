@@ -26,7 +26,7 @@ if( file_exists( BASE_DIR . '/composer/vendor/autoload.php' ) ){
  */
 
 
-class Fnsk {
+class Kkpll {
 
     private $plugins = array();
 
@@ -105,4 +105,4 @@ class Fnsk {
 
 }
 
-new Fnsk();
+new Kkpll();

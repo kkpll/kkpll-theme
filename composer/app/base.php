@@ -14,7 +14,7 @@ class Base{
         $this->theme_url      = get_template_directory_uri();
         $this->plugin_path   = $this->theme_path . "/composer";
         $this->plugin_url    = $this->theme_url . "/composer";
-        $this->plugin_prefix = 'fnsk';
+        $this->plugin_prefix = 'Kkpll';
 
     }
 
