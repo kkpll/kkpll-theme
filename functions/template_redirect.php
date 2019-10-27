@@ -87,11 +87,3 @@ function my_template_redirect() {
     exit();
 
 }
-
-////記事表示数を変更するときは以下のように
-// function my_home_category( $query ) {
-//     if ( $query->is_post_type_archive( 'solution' ) ) {
-//         $query->set( 'posts_per_page', '1' );
-//     }
-// }
-// add_action( 'pre_get_posts', 'my_home_category' );
