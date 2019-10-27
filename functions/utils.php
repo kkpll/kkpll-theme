@@ -13,19 +13,20 @@ function get_the_post_data( $post_id=null ){
     global $post;
 
     $id = $post_id ? $post_id : $post->ID;
-    $return['post_type'] = $post->post_type;;
-    $post_type_obj = get_post_type_object($return['post_type']);
-    $return['post_type_name'] = $post_type_obj->labels->singular_name;
-    $return['permalink'] = get_the_permalink($id); //パーマリンク
-    $return['title'] = get_the_title($id); //タイトル
-    $return['content'] = get_the_content($id); //本文
-    $return['thumbnail'] = has_post_thumbnail($id) ? get_the_post_thumbnail_url($id,'medium') : NULL; //サムネイルURL
-    $return['date'] = get_the_date(get_option('date_format'),$id); //日付
-    $return['excerpt'] = $post->post_excerpt; //抜粋
-    $return['custom_field'] = get_post_meta($id);
 
-    $return['category'] = array();
-    $return['tag'] = array();
+    $return['id']             = $id;
+    $return['post_type']      = $post->post_type;
+    $post_type_obj            = get_post_type_object($return['post_type']);
+    $return['post_type_name'] = $post_type_obj->labels->singular_name;
+    $return['permalink']      = get_the_permalink($id); //パーマリンク
+    $return['title']          = get_the_title($id); //タイトル
+    $return['content']        = get_the_content($id); //本文
+    $return['thumbnail']      = has_post_thumbnail($id) ? get_the_post_thumbnail_url($id,'medium') : NULL; //サムネイルURL
+    $return['date']           = get_the_date(get_option('date_format'),$id); //日付
+    $return['excerpt']        = $post->post_excerpt; //抜粋
+    $return['custom_field']   = get_post_meta($id);
+    $return['category']       = array();
+    $return['tag']            = array();
 
     //記事が持つタクソノミーをすべて取得
     if($taxs = get_post_taxonomies($id)){
@@ -46,8 +47,6 @@ function get_the_post_data( $post_id=null ){
         }
     }
 
-    $return['id'] = $id;
-
     return $return;
 
 }
@@ -64,7 +63,7 @@ function get_the_related_posts(){
 
     $return = array();
 
-    if (is_single()){
+    if ( is_single() ){
 
         $post_type = get_post_type();
         $post_type_object = get_post_type_object($post_type);
@@ -87,7 +86,7 @@ function get_the_related_posts(){
             }
         }
 
-    }elseif(is_page()){
+    }elseif( is_page() ){
 
         $related_query = new WP_Query();
         $args = $related_query->query(array(
