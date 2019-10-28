@@ -14,11 +14,18 @@ $options = array(
 );
 $twig = new \Twig\Environment($loader,$options);
 
+
+/*
+ *
+ * テンプレート内関数
+ *
+ */
+
 $function = new \Twig\TwigFunction( 'wp_head', 'wp_head' );
 $twig->addFunction( $function );
 
 $function = new \Twig\TwigFunction( 'wp_footer', 'wp_footer' );
 $twig->addFunction( $function );
 
-$function = new \Twig\TwigFunction( 'pager', 'pager' );
+$function = new \Twig\TwigFunction( 'pager', 'pagination' );
 $twig->addFunction( $function );

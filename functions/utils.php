@@ -2,6 +2,42 @@
 
 /*
  *
+ * 記事データをセットして返す
+ *
+ */
+
+ function set_posts_data( &$posts=array(), $query=null ){
+
+     if( !$query ){
+         global $wp_query;
+         $query = $wp_query;
+     }
+
+     if( $query->have_posts() ){
+
+         while( $query->have_posts() ){
+             $query->the_post();
+
+             $data = get_the_post_data();
+
+             array_push( $posts, $data );
+
+         }
+
+         if( !$query->is_main_query() ){
+             wp_reset_postdata();
+         }
+     }
+
+     return $posts;
+
+ }
+
+
+
+
+/*
+ *
  * 記事データ取得
  *
  */
@@ -34,14 +70,12 @@ function get_the_post_data( $post_id=null ){
             if($tax !== "post_format"){ //post_formatだけ取り除く
                 $taxonomy = get_taxonomy($tax);
                 $taxonomy_type = $taxonomy->hierarchical ? 'category' : 'tag';
-                $return[$taxonomy_type][$tax] = array();
                 $terms = get_the_terms($id, $tax);
                 if($terms){//この記事に使われていたら
+                    $return[$taxonomy_type][$tax] = array();
                     foreach ((array)$terms as $term){
                         array_push($return[$taxonomy_type][$tax], array('name' => $term->name, 'slug'=> $term->slug,'link' => get_term_link($term->term_id)));
                     }
-                }else{
-                    unset($return[$taxonomy_type][$tax]);
                 }
             }
         }

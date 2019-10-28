@@ -5,7 +5,8 @@
  * ページ送り
  *
  */
-function pager( $query = null, $prev_text=null, $next_text=null ){
+
+function pagination( $query = null, $prev_text = null, $next_text = null ){
 
     global $wp_query;
 
@@ -26,7 +27,7 @@ function pager( $query = null, $prev_text=null, $next_text=null ){
 
     if( !$pager ) return;
 
-    echo "<ul class='pager'>";
+    echo "<ul class='pagination'>";
 
     foreach( $pager as $page ){
 
