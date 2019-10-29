@@ -152,6 +152,48 @@ function get_the_related_posts(){
 }
 
 
+/*
+ *
+ * 再帰的に子カテゴリーを取得する
+ *
+ */
+
+ function get_all_terms( $original_terms, $taxonomy, &$args = array() ){
+
+     if( !function_exists( '__loop' ) ) {
+
+         function __loop( $parent_id, $taxonomy, &$args ){
+
+             $terms = get_term_children( $parent_id, $taxonomy );
+
+             if($terms){
+
+                 $args[$parent_id] = array();
+
+                 foreach($terms as $term){
+
+                     $args[$parent_id][$term] = null;
+
+                     __loop( $term, $taxonomy, $args[$parent_id] );
+
+                 }
+
+             }else{
+
+                 $args[$parent_id] = null;
+
+             }
+
+         }
+     }
+
+     foreach( $original_terms as $term ){
+         __loop( $term->term_id, $taxonomy, $args );
+     }
+
+     return $args;
+
+ }
 
 
 /*
