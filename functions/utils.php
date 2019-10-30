@@ -158,40 +158,43 @@ function get_the_related_posts(){
  *
  */
 
- function get_all_terms( $original_terms, $taxonomy, &$args = array() ){
+ class GetAllTerms{
 
-     if( !function_exists( '__loop' ) ) {
+     public static function excute( $terms, $taxonomy, &$args = array() ){
 
-         function __loop( $parent_id, $taxonomy, &$args ){
+         foreach( $terms as $term ){
 
-             $terms = get_term_children( $parent_id, $taxonomy );
+             self::__loop( $term->term_id, $taxonomy, $args );
 
-             if($terms){
+         }
 
-                 $args[$parent_id] = array();
+         return $args;
 
-                 foreach($terms as $term){
+     }
 
-                     $args[$parent_id][$term] = null;
+     private function __loop( $term_id, $taxonomy, &$args ){
 
-                     __loop( $term, $taxonomy, $args[$parent_id] );
+         $terms = get_term_children( $term_id, $taxonomy );
 
-                 }
+         if($terms){
 
-             }else{
+             $args[$term_id] = array();
 
-                 $args[$parent_id] = null;
+             foreach($terms as $term){
+
+                 $args[$term_id][$term] = null;
+
+                 self::__loop( $term, $taxonomy, $args[$term_id] );
 
              }
 
+         }else{
+
+             $args[$term_id] = null;
+
          }
-     }
 
-     foreach( $original_terms as $term ){
-         __loop( $term->term_id, $taxonomy, $args );
      }
-
-     return $args;
 
  }
 
