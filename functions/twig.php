@@ -6,26 +6,38 @@
  *
  */
 
-$loader = new \Twig\Loader\FilesystemLoader( get_template_directory().'/template' );
-$options = array(
-    'strict_variables' => false,
-    'debug' => false,
-    'cache'=> false
-);
-$twig = new \Twig\Environment($loader,$options);
 
+class Template{
 
-/*
- *
- * テンプレート内関数
- *
- */
+    static $twig;
 
-$function = new \Twig\TwigFunction( 'wp_head', 'wp_head' );
-$twig->addFunction( $function );
+    static function register(){
 
-$function = new \Twig\TwigFunction( 'wp_footer', 'wp_footer' );
-$twig->addFunction( $function );
+        $loader = new \Twig\Loader\FilesystemLoader( get_template_directory().'/template' );
 
-$function = new \Twig\TwigFunction( 'pager', 'pagination' );
-$twig->addFunction( $function );
+        $options = array(
+            'strict_variables' => false,
+            'debug' => false,
+            'cache'=> false
+        );
+
+        self::$twig = new \Twig\Environment( $loader,$options );
+
+        $function = new \Twig\TwigFunction( 'wp_head', 'wp_head' );
+        self::$twig->addFunction( $function );
+
+        $function = new \Twig\TwigFunction( 'wp_footer', 'wp_footer' );
+        self::$twig->addFunction( $function );
+
+        $function = new \Twig\TwigFunction( 'pagination', 'pagination' );
+        self::$twig->addFunction( $function );
+
+        //定数アクセス無効化
+        $function = new \Twig\TwigFunction( 'constant', function() { return false; } );
+        self::$twig->addFunction( $function );
+
+        return self::$twig;
+
+    }
+
+}
