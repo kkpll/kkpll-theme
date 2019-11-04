@@ -33,91 +33,179 @@ class CustomBreadcrumb {
     *
     */
 
-    private function __loop( $term_id, $taxonomy, &$args ){
-
-        if( $terms = get_term_children( $term_id, $taxonomy ) ){
-
-            //$args[$term_id] = array();
-
-            foreach( $terms as $term ){
-
-                $args[$term_id][$term] = NULL;
-
-                $this->__loop( $term, $taxonomy, $args[$term_id] );
-
-            }
-
-        }
-
-    }
-
-
     public function getSinglePageInfo(){
 
         $this->addPostTypeBreadCrumb( $this->queried->post_type );
-
-        $args = array();
 
         $post_id = $this->queried->ID;
 
         $taxs = get_post_taxonomies( $post_id );
 
-        $terms = get_terms( $taxs, array( 'parent' => 0 ) );
+        $mt = new MyTerms( 'product_category', $post_id );
 
-        $post_terms             = array();
-        $post_terms['category'] = array();
-        $post_terms['tag']      = array();
+        $terms = $mt->getTaxTerms();
+        $terms = $mt->getPostTerms();
 
-        foreach( $terms as $term ){
+        $mt->createTermList();
 
-            if( $terms = get_the_terms( $post_id, $term->taxonomy ) ){
 
-                foreach( $terms as $term){
+        // $tax_terms = $mt->getTaxTerms();
+        // $mt->scanArray( $tax_terms, function( $key, $value ) use ( $term_IDs ){
+        //
+        //     if( in_array( $key, $term_IDs ) ){
+        //         echo $key;
+        //         echo "<br><br>";
+        //     }
+        //
+        // });
 
-                    $taxonomy = get_taxonomy( $term->taxonomy );
 
-                    if( $taxonomy->hierarchical ){
 
-                        $parents = $this->getParents( $term->term_id, $term->taxonomy );
-                        //array_push( $parents, $term->term_id );
 
-                        $parents = $parents ? array( $parents[0] => $parents ) : '' ;
 
-                        array_push( $post_terms['category'], array(
-                            'id'      => $term->term_id,
-                            'text'    => $term->name,
-                            'parents' => $parents,
-                        ));
 
-                    }else{
 
-                        array_push( $post_terms['tag'], $term->name );
 
-                    }
 
-                }
 
-            }
+        // $taxs = get_post_taxonomies( $post_id );
+        //
+        // $post_terms = array( 'category' => array(), 'tag' => array() );
+        //
+        // foreach( $taxs as $tax ){
+        //
+        //     if( $terms = get_the_terms( $post_id, $tax ) ){
+        //
+        //         $post_terms['category'][$tax] = array();
+        //
+        //         foreach( $terms as $term ){
+        //
+        //             $taxonomy = get_taxonomy( $tax );
+        //
+        //             if( $taxonomy->hierarchical ){
+        //
+        //                 $parents = $this->getParents( $term->term_id, $term->taxonomy );
+        //
+        //                 array_push( $parents, $term->term_id );
+        //
+        //                 array_push( $post_terms['category'][$tax], array( 'id' => $term->term_id, 'text' => $term->name, 'parents' => $parents ) );
+        //
+        //             }else{
+        //
+        //                 array_push( $post_terms['tag'][$tax], $term->term_id );
+        //
+        //             }
+        //
+        //         }
+        //
+        //     }
+        //
+        // }
+        //
+        // $breadcrumb = array();
+        //
+        // foreach( $post_terms['category'] as $value ){
+        //
+        //     $prev = array();
+        //
+        //     foreach( $value as $next ){
+        //
+        //         if( !$prev ){
+        //
+        //             $prev = $next['parents'];
+        //
+        //             $breadcrumb[$next['text']] = $next['parents'];
+        //
+        //         }else if( $prev[0] === $next['parents'][0] ){
+        //
+        //             if( count( $prev ) <= count( $next['parents'] ) ){
+        //
+        //                 $breadcrumb[$next['text']] = $prev = $next['parents'];
+        //
+        //             }
+        //
+        //         }
+        //
+        //     }
+        //
+        // }
+        //
+        // var_dump( $breadcrumb );
 
-        }
 
-        //var_dump($post_terms);
 
-        $parents = array();
 
-        foreach( $post_terms['category'] as $category ){
 
-            if( is_array( $category['parents'] ) ){
 
-                $key = array_keys( $category['parents'] )[0];
+        // foreach( $terms as $term ){
+        //
+        //     if( $terms = get_the_terms( $post_id, $term->taxonomy ) ){
+        //
+        //         foreach( $terms as $term){
+        //
+        //             $taxonomy = get_taxonomy( $term->taxonomy );
+        //
+        //             if( $taxonomy->hierarchical ){
+        //
+        //                 $parents = $this->getParents( $term->term_id, $term->taxonomy );
+        //
+        //                 $parents = $parents ? $parents : '' ;
+        //
+        //                 array_push( $post_terms['category'], array(
+        //                     'id'      => $term->term_id,
+        //                     'text'    => $term->name,
+        //                     'parents' => $parents,
+        //                 ));
+        //
+        //             }else{
+        //
+        //                 array_push( $post_terms['tag'], $term->name );
+        //
+        //             }
+        //
+        //         }
+        //
+        //     }
+        //
+        // }
+        //
+        // $parents = array();
+        //
+        // foreach( $post_terms['category'] as $category ){
+        //
+        //     if( is_array( $category['parents'] ) ){
+        //
+        //         $keys = array_keys( $parents );
+        //         $parent = $category['parents'][0];
+        //
+        //         if( !$parents ){
+        //
+        //             $parents[$parent] = $category['parents'];
+        //
+        //         }else if( in_array( $parent, $keys ) ){
+        //
+        //             foreach( $parents[$parent] as $p ){
+        //
+        //                 if( count($p) < count( $category['parents'] ) ){
+        //
+        //                     $parents[$parent] = $category['parents'];
+        //
+        //                 }else if( count($p) === count( $category['parents'] ) ){
+        //
+        //                     $parents[$parent] = $category['parents'];
+        //
+        //                 }
+        //
+        //             }
+        //
+        //         }
+        //
+        //     }
+        //
+        // }
+        //
+        // var_dump($parents);
 
-                $parents[$key] = $category['parents'][$key];
-
-            }
-
-        }
-
-        var_dump($parents);
 
 
 

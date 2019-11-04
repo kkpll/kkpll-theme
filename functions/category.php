@@ -1,92 +1,147 @@
 <?php
 
-/*
- *
- * 再帰的に子カテゴリーを取得する
- *
- */
+class MyTerms{
 
- class CustomCategory {
+    public $taxs = array();
 
-     public static function getAllChildren( $taxonomy ){
+    public $post_id = '';
 
-         $args = array();
+    public $tax_terms;
 
-         $terms = get_terms( $taxonomy, array( 'hide_empty' => 0, 'parent' => 0 ) );
+    public $post_terms;
 
-         foreach( $terms as $term ){
 
-             self::__get_term_children_loop( $term->term_id, $taxonomy, $args );
+    function __construct( $taxs = array(), $post_id = NULL ){
 
-         }
+        $this->taxs = $taxs;
 
-         return $args;
+        $this->post_id = $post_id;
 
-     }
+    }
 
-     public static function getParentTerms( $taxonomy, $terms = array() ){
 
-         $args = array();
+    public function createTermList(){
 
-         $terms = get_terms( $taxonomy, array( 'parent' => 0 ) );
+        $term_ID_arr = array();
 
-         foreach( $terms as $term ){
+        foreach($this->post_terms as $term){
+            $term_ID_arr[] = $term->term_id;
+        }
 
-             self::__get_term_children_loop( $term->term_id, $taxonomy, $args );
+        // $this->scanArray( $this->tax_terms, function( $key, $value ) use ( $term_ID_arr ){
+        //
+        //     if( in_array( $key, $term_ID_arr ) ){
+        //
+        //         $value = "ここです";
+        //     }
+        //
+        // });
 
-         }
+        $a = array_filter($this->tax_terms,function($key,$value){
+            var_dump( $key );
 
-         return $args;
+        });
 
-     }
 
-     private function __get_term_children_loop( $term_id, $taxonomy, &$args ){
+
+
+
+
+    }
+
+
+    public function registerTaxs( $taxs ){
+
+        if( is_array( $taxs ) || is_string( $taxs ) ){
+
+            $this->$taxs = $taxs;
+
+        }
+
+    }
+
+    public function registerPostId( $post_id ){
+
+        $this->post_id = $post_id;
+
+    }
+
+
+    public function getTaxTerms( $taxs = array() ){
+
+        $this->tax_terms = array();
+
+        $taxs = $taxs ? $taxs : $this->taxs;
+
+        $tax_terms = get_terms( $this->taxs, array( 'parent' => 0, 'hide_empty' => false ) );
+
+        foreach( $tax_terms as $term ){
+
+            $this->get_term_children_loop( $term->term_id, $taxs, $this->tax_terms );
+
+        }
+
+        return $this->tax_terms;
+
+    }
+
+
+    public function getPostTerms( $post_id = NULL, $tax = NULL ){
+
+        $post_id = $post_id ? $post_id : $this->post_id ;
+
+        if( !$tax ){
+
+            $tax = is_array( $this->taxs ) ? $this->taxs[0] : $this->taxs ;
+
+        }
+
+        $this->post_terms = get_the_terms( $post_id, $tax );
+
+        return $this->post_terms;
+
+    }
+
+    public function scanArray( &$array, $callback ){
+
+        foreach( (array)$array as $key => $value ){
+
+            if ( is_callable( $callback ) ) {
+
+                call_user_func( $callback, $key, $value );
+
+            }
+
+            if( is_array( $value ) ){
+
+                $this->scanArray( $value, $callback );
+
+            }
+
+        }
+
+    }
+
+     private function get_term_children_loop( $term_id, $taxonomy, &$args ){
 
          $terms = get_term_children( $term_id, $taxonomy );
 
-         if($terms){
+         if( $terms ){
 
              $args[$term_id] = array();
 
-             foreach($terms as $term){
+             foreach( $terms as $term ){
 
-                 $args[$term_id][$term] = NULL;
+                 $term = get_term_by( 'id', $term, $taxonomy );
 
-                 self::__get_term_children_loop( $term, $taxonomy, $args[$term_id] );
+                 if( $term->parent === $term_id ){
 
-             }
+                      $args[$term_id][$term->term_id] = array();
 
-         }else{
+                      $this->get_term_children_loop( $term->term_id, $taxonomy,  $args[$term_id] );
 
-             $args[$term_id] = NULL;
-
-         }
-
-     }
-
-     private function __check_term_loop( $term_id, $taxonomy, &$args, $check_terms ){
-
-         $terms = get_term_children( $term_id, $taxonomy );
-
-         if($terms){
-
-             $args[$term_id] = array();
-
-             foreach($terms as $term){
-
-                 $args[$term_id][$term] = NULL;
-
-                 foreach( $check_terms as $ct ){
-                     if( $ct === $term ){
-
-
-                         break;
-
-                     }
                  }
 
-                 self::__get_term_children_loop( $term, $taxonomy, $args[$term_id] );
-
              }
 
          }else{
@@ -96,6 +151,5 @@
          }
 
      }
-
 
  }
