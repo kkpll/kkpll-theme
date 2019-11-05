@@ -13,9 +13,9 @@ class Template{
 
     static function register(){
 
-        require_once(get_template_directory().'/twig-1.x/lib/Twig/Autoloader.php');
+        require_once( THEME_DIR.'/twig/lib/Twig/Autoloader.php');
         Twig_Autoloader::register();
-        $loader = new Twig_Loader_Filesystem( get_template_directory().'/template' );
+        $loader = new Twig_Loader_Filesystem( THEME_DIR . '/template' );
         self::$twig = new Twig_Environment($loader);
 
         //定数アクセス無効化
@@ -40,3 +40,6 @@ class Template{
     }
 
 }
+
+
+Template::register();

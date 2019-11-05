@@ -1,8 +1,14 @@
 <?php
 
-require_once "admin/kkpll.php";
+require_once "functions/const.php";
+
+
+require_once "functions/admin/admin.php";
+
+// require_once "admin/kkpll.php";
 
 require_once "functions/twig.php";
+
 
 require_once "functions/add_rewrite_rule.php";   //リライトルール追加
 require_once "functions/pre_get_posts.php";
