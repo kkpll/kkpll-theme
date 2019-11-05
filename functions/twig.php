@@ -13,7 +13,7 @@ class Template{
 
     static function register(){
 
-        require_once(get_template_directory().'/twig/lib/Twig/Autoloader.php');
+        require_once(get_template_directory().'/twig-1.x/lib/Twig/Autoloader.php');
         Twig_Autoloader::register();
         $loader = new Twig_Loader_Filesystem( get_template_directory().'/template' );
         self::$twig = new Twig_Environment($loader);
