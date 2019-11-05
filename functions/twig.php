@@ -13,27 +13,26 @@ class Template{
 
     static function register(){
 
-        $loader = new \Twig\Loader\FilesystemLoader( get_template_directory().'/template' );
-
-        $options = array(
-            'strict_variables' => false,
-            'debug' => false,
-            'cache'=> false
-        );
-
-        self::$twig = new \Twig\Environment( $loader,$options );
-
-        $function = new \Twig\TwigFunction( 'wp_head', 'wp_head' );
+        require_once(get_template_directory().'/twig/lib/Twig/Autoloader.php');
+        Twig_Autoloader::register();
+        $loader = new Twig_Loader_Filesystem( get_template_directory().'/template' );
+        self::$twig = new Twig_Environment($loader);
+        
+        //定数アクセス無効化
+        $function = new Twig_SimpleFunction( 'constant', function() { return false; } );
         self::$twig->addFunction( $function );
 
-        $function = new \Twig\TwigFunction( 'wp_footer', 'wp_footer' );
+        $function = new Twig_SimpleFunction( 'wp_head', 'wp_head' );
         self::$twig->addFunction( $function );
 
-        $function = new \Twig\TwigFunction( 'pagination', 'pagination' );
+        $function = new Twig_SimpleFunction( 'wp_footer', 'wp_footer' );
+        self::$twig->addFunction( $function );
+
+        $function = new Twig_SimpleFunction( 'pagination', 'pagination' );
         self::$twig->addFunction( $function );
 
         //定数アクセス無効化
-        $function = new \Twig\TwigFunction( 'constant', function() { return false; } );
+        $function = new Twig_SimpleFunction( 'constant', function() { return false; } );
         self::$twig->addFunction( $function );
 
         return self::$twig;
