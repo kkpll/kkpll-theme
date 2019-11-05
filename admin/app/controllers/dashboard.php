@@ -35,12 +35,27 @@ class Dashboard extends Base{
             'fnsk'
         );
 
+        add_settings_section(
+            'fnsk_top__breadcrumb_section',
+            'パンくずリスト',
+            array( $this, 'render_top_section_breadcrumb' ),
+            'fnsk'
+        );
+
         add_settings_field(
             'fnsk_top_field',
             'トップフィールド',
             array( $this, 'render_top_field' ),
             'fnsk',
             'fnsk_top_section'
+        );
+
+        add_settings_field(
+            'fnsk_top_section_breadcrumb_field',
+            '入力してください',
+            array( $this, 'render_breadcrumb_field' ),
+            'fnsk',
+            'fnsk_top__breadcrumb_section'
         );
 
     }
@@ -70,9 +85,20 @@ class Dashboard extends Base{
         echo "トップセクション";
     }
 
-    public function render_top_field(){
-        echo "<input type='text' name='fnsk_top_name' value='".get_option('fnsk_top_name')."' />";
+    public function render_top_section_breadcrumb(){
+        echo "パンくずリストの優先順位を決めてください";
     }
+
+    public function render_top_field(){
+        $option = get_option('fnsk_top_name');
+        echo "<input type='text' name='fnsk_top_name[top]' value='".$option['top']."' />";
+    }
+
+    public function render_breadcrumb_field(){
+        $option = get_option('fnsk_top_name');
+        echo "<input type='text' name='fnsk_top_name[breadcrumb]' value='".$option['breadcrumb']."' />";
+    }
+
 
 
 }
