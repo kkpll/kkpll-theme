@@ -17,7 +17,7 @@ class Template{
         Twig_Autoloader::register();
         $loader = new Twig_Loader_Filesystem( get_template_directory().'/template' );
         self::$twig = new Twig_Environment($loader);
-        
+
         //定数アクセス無効化
         $function = new Twig_SimpleFunction( 'constant', function() { return false; } );
         self::$twig->addFunction( $function );
@@ -38,5 +38,6 @@ class Template{
         return self::$twig;
 
     }
+
 
 }
