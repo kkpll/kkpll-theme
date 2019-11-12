@@ -26,8 +26,6 @@ function my_template_redirect() {
     $breadcrumb = array();
     array_push( $breadcrumb, array( 'name' => 'HOME', 'link' => home_url()) ); //トップページ
 
-	$twig = Template::register();
-
 	$breadcrumb = new CustomBreadcrumb();
 
 	if ( is_home() ) {
@@ -118,6 +116,7 @@ function my_template_redirect() {
 
 	$template = $template ? $template : '404';
 
+	global $twig;
 	echo $twig->render( $template.'.html', array(
 		'head_title'=> $title,
 		'breadcrumb'=> $breadcrumb,

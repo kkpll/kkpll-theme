@@ -7,7 +7,7 @@ if( !defined( 'ABSPATH') ){
 require_once THEME_DIR . '/functions/admin/class/admin_page.php';
 require_once THEME_DIR . '/functions/admin/class/dashboard.php';
 
-class Kkpll {
+class MyAdmin {
 
     private $plugins = array();
 
@@ -28,11 +28,11 @@ class Kkpll {
     }
 
     public function admin_init(){
-        $this->__activated_plugins_method( __FUNCTION__ );
+        $this->checkMethod( __FUNCTION__ );
     }
 
     public function admin_menu(){
-        $this->__activated_plugins_method( __FUNCTION__ );
+        $this->checkMethod( __FUNCTION__ );
     }
 
     public function admin_enqueue_scripts( $page ){
@@ -53,7 +53,7 @@ class Kkpll {
 
     }
 
-    private function __activated_plugins_method( $function_name ){
+    private function checkMethod( $function_name ){
         foreach( $this->plugins as $plugin ){
             if( method_exists( $plugin, $function_name ) ){
                 call_user_func( array( $plugin, $function_name ) );
@@ -63,4 +63,4 @@ class Kkpll {
 
 }
 
-new Kkpll();
+new MyAdmin();

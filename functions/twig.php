@@ -13,9 +13,16 @@ class Template{
 
     static function register(){
 
-        require_once( THEME_DIR.'/twig/lib/Twig/Autoloader.php');
-        Twig_Autoloader::register();
+        if( !self::$twig ){
+
+            require_once( THEME_DIR.'/twig/lib/Twig/Autoloader.php' );
+
+            Twig_Autoloader::register();
+
+        }
+
         $loader = new Twig_Loader_Filesystem( THEME_DIR . '/template' );
+
         self::$twig = new Twig_Environment($loader);
 
         //定数アクセス無効化
@@ -31,15 +38,10 @@ class Template{
         $function = new Twig_SimpleFunction( 'pagination', 'pagination' );
         self::$twig->addFunction( $function );
 
-        //定数アクセス無効化
-        $function = new Twig_SimpleFunction( 'constant', function() { return false; } );
-        self::$twig->addFunction( $function );
-
         return self::$twig;
 
     }
 
 }
 
-
-Template::register();
+$twig = Template::register();
