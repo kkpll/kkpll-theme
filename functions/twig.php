@@ -15,7 +15,7 @@ class Template{
 
         if( !self::$twig ){
 
-            require_once( THEME_DIR.'/twig/lib/Twig/Autoloader.php' );
+            require_once( THEME_DIR.'/lib/twig/lib/Twig/Autoloader.php' );
 
             Twig_Autoloader::register();
 
