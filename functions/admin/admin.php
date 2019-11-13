@@ -48,7 +48,7 @@ class MyAdmin {
 
         foreach( $this->plugins as $name => $plugin ){
             if( method_exists( $plugin, __FUNCTION__ ) ){
-                if( $page === 'fnsk_page_fnsk_' . $name . '_page' ){
+                if( $page === 'fnsk_page_fnsk_' . $name ){
                     call_user_func( array( $plugin,  __FUNCTION__ ) );
                 }
             }
