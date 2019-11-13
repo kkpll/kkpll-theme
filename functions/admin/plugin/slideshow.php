@@ -10,7 +10,7 @@ class Slideshow implements AdminPage{
         register_setting(
             'fnsk_slideshow_group',
             'fnsk_slideshow',
-            array(SlideshowCallback::class,'sanitize'),
+            array(SlideshowCallback::class,'sanitize')
         );
 
         add_settings_section(
@@ -38,7 +38,7 @@ class Slideshow implements AdminPage{
             'スライドショー',
             'manage_options',
             'fnsk_slideshow',
-            array( SlideshowCallback::class, 'render_page' ),
+            array( SlideshowCallback::class, 'render_page' )
         );
 
     }

@@ -11,7 +11,7 @@ class Dashboard implements AdminPage{
         register_setting(
             'fnsk_dashboard_group',
             'fnsk_dashboard',
-            '',
+            ''
         );
 
         add_settings_section(
@@ -54,7 +54,7 @@ class Dashboard implements AdminPage{
             'Fnsk',
             'manage_options',
             'fnsk',
-            array(DashboardCallback::class,'render_page'),
+            array(DashboardCallback::class,'render_page')
         );
 
         add_submenu_page(
@@ -63,7 +63,7 @@ class Dashboard implements AdminPage{
             'ダッシュボード',
             'manage_options',
             'fnsk',
-            array(DashboardCallback::class,'render_page'),
+            array(DashboardCallback::class,'render_page')
         );
 
     }
