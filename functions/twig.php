@@ -38,6 +38,15 @@ class Template{
         $function = new Twig_SimpleFunction( 'pagination', 'pagination' );
         self::$twig->addFunction( $function );
 
+        $function = new Twig_SimpleFunction( 'settings_fields', 'settings_fields' );
+        self::$twig->addFunction( $function );
+
+        $function = new Twig_SimpleFunction( 'do_settings_sections', 'do_settings_sections' );
+        self::$twig->addFunction( $function );
+
+        $function = new Twig_SimpleFunction( 'submit_button', 'submit_button' );
+        self::$twig->addFunction( $function );
+
         return self::$twig;
 
     }

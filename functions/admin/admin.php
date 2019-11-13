@@ -4,8 +4,10 @@ if( !defined( 'ABSPATH') ){
     exit;
 }
 
-require_once THEME_DIR . '/functions/admin/class/admin_page.php';
-require_once THEME_DIR . '/functions/admin/class/dashboard.php';
+require_once THEME_DIR . '/functions/admin/plugin/admin_page.php';
+require_once THEME_DIR . '/functions/admin/plugin/dashboard.php';
+require_once THEME_DIR . '/functions/admin/plugin/slideshow.php';
+
 
 class MyAdmin {
 
@@ -15,6 +17,7 @@ class MyAdmin {
 
         $this->plugins = array(
             'dashboard' => Dashboard::class,
+            'slideshow' => Slideshow::class,
         );
 
         foreach( $this->plugins as $name => $plugin ){
