@@ -1,1 +1,206 @@
-<p>スライドショーフィールド</p>
+<div id="fnsk_slideshow_field">
+{% for key, slideshow in slideshows %}
+    <div data-index="{{key}}">
+        <p><span>タイトル</span><input type="text" name="fnsk_slideshow[{{ key }}][title]" value="{{ slideshow.title }}" class="fnsk_slideshow_input_title regular-text"/></p>
+        <p>
+            <span>タイプ</span><select name="fnsk_slideshow[{{ key }}][type]" class="fnsk_slideshow_select_type">
+                <option value="image" {% if slideshow.type == post_type.slug %}selected{% endif %}>画像</option>
+                {% for post_type in post_types %}
+                    <option value="{{ post_type.slug }}" {% if slideshow.type == post_type.slug %}selected{% endif %}>{{ post_type.label }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <ul class="fnsk_slideshow_radio fnsk_slideshow_radio_image" {% if slideshow.type != 'image' %} style="display:none;" {% endif %}>
+            <span>画像</span>{%  for image in slideshow.image %}<li><input type="text" name="fnsk_slideshow[{{ key }}][image][]" value="{{ image }}" class="fnsk_slideshow_input_image"/><a href="#" class="fnsk_slideshow_remove_image">削除</a></li>{% endfor %}
+            <a href="#" class="fnsk_slideshow_add_image">画像を追加</a>
+        </ul>
+        {% for post_type in post_types %}
+            <p class="fnsk_slideshow_radio fnsk_slideshow_radio_{{post_type.slug}}" {% if slideshow.type != post_type.slug %} style="display:none;" {% endif %}>
+                <span>カテゴリ</span>
+                {% for term in post_type.terms %}
+                    <label><input type="radio" name="fnsk_slideshow[{{ key }}][radio]" value="{{ term.name }}" {% if slideshow.radio == term.name %} checked {% endif %} />{{ term.name }} </label>
+                {% endfor %}
+            </p>
+        {% endfor %}
+        <p class="fnsk_slideshow_support" {% if slideshow.support == 'image' %} style="display:none;" {% endif %}>
+            <span>表示項目</span><input type="text" name="fnsk_slideshow[{{ key }}][supports]" value="{{ slideshow.supports }}" class="regular-text"/>
+            <small>※カンマ区切りで記入してください</small>
+        </p>
+        <a href="#" class="fnsk_slideshow_remove">このスライドショーを削除</a>
+    </div>
+{% endfor %}
+</div>
+
+<style>
+    #fnsk_slideshow_field > div{
+        margin-bottom:2rem;
+        border:1px solid gray;
+        border-radius:5px;
+        padding:1rem;
+        clear:both;
+        overflow:hidden;
+    }
+
+    #fnsk_slideshow_field select{
+        min-width:150px;
+    }
+
+    #fnsk_slideshow_field span{
+        display:inline-block;
+        width:90px;
+        font-weight:bold;
+    }
+
+    #fnsk_slideshow_field small{
+        display:block;
+        font-size:0.7rem;
+        margin-left:90px;
+    }
+
+    .fnsk_slideshow_remove{
+        display:inline-block;
+        float:right;
+        margin-top:1rem;
+    }
+
+    .fnsk_slideshow_radio label{
+        margin-right:0.5rem;
+    }
+
+    ul.fnsk_slideshow_radio_image{
+        margin:4px 0 0 0;
+    }
+
+    .fnsk_slideshow_radio_image li{
+        display:inline-block;
+    }
+</style>
+
+<script>
+    (function($){
+
+        //スライドショー新規作成
+        $('#fnsk_slideshow_add').on('click',function(e){
+
+            e.preventDefault();
+
+            var next_index;
+
+            numbering(function(index){
+                next_index = index;
+            })
+
+            next_index = next_index !== undefined ? next_index + 1 : 0;
+
+            $('#fnsk_slideshow_field').append(renderSlideshow(next_index));
+
+        });
+
+        //スライドショー削除
+        $(document).on('click','.fnsk_slideshow_remove',function(e){
+
+            e.preventDefault();
+            $(this).parent().remove();
+            numbering();
+
+        });
+
+        //画像削除
+        $(document).on('click', '.fnsk_slideshow_remove_image', function(e){
+
+            e.preventDefault();
+
+            var images = $(this).parent().parent().find('.fnsk_slideshow_input_image');
+
+            if( images.length > 1 ){
+                $(this).parent().remove();
+            }else{
+                $(this).parent().parent().parent().remove();
+                numbering();
+            }
+
+        });
+
+        //画像追加
+        $(document).on('click', '.fnsk_slideshow_add_image', function(e){
+
+            e.preventDefault();
+
+            var index = $(this).parent().parent().attr('data-index');
+
+            $(this).before(renderImage(index));
+
+        });
+
+
+        //番号を振り直す
+        function numbering(callback){
+
+            $('#fnsk_slideshow_field > div').each(function(index){
+
+                $(this).attr('data-index', index);
+
+                $(this).find('.fnsk_slideshow_input_title').attr('name', 'fnsk_slideshow[' + index + '][title]');
+
+                (function(idx,self){
+                    $(self).find('ul > li').each(function(){
+                        $(this).find('.fnsk_slideshow_input_image').attr('name', 'fnsk_slideshow[' + idx + '][image][]');
+                    });
+                })(index,this);
+
+                if( callback ) callback(index);
+
+            });
+
+        }
+
+        //スライドショータイプ切り替え
+        $(document).on('change', '.fnsk_slideshow_select_type', function(){
+            var post_type = $(this).val();
+            var parent = $(this).parent().parent();
+            parent.find('.fnsk_slideshow_radio').css('display','none');
+            parent.find('.fnsk_slideshow_radio_' + post_type).css('display','block');
+            if(post_type=='image'){
+                parent.find('.fnsk_slideshow_support').css('display','none');
+            }else{
+                parent.find('.fnsk_slideshow_support').css('display','block');
+            }
+        });
+
+        //スライドショー出力
+        function renderSlideshow(index){
+
+            return '<div data-index="' + index + '">'
+                + '<p><input type="text" name="fnsk_slideshow[' + index + '][title]" value="" class="fnsk_slideshow_input_title"/></p>'
+                + '<p><select name="fnsk_slideshow[' + index + '][type]" class="fnsk_slideshow_select_type">'
+                + '<option value="image">画像</option>'
+                {% for post_type in post_types %}
+                + '<option value="{{post_type.slug}}">{{post_type.label}}</option>'
+                {% endfor %}
+                + '</select></p>'
+                {% for post_type in post_types %}
+                    + '<p class="fnsk_slideshow_radio fnsk_slideshow_radio_{{post_type.slug}}" style="display:none;">'
+                    {% for term in post_type.terms %}
+                        + '<label>{{term.name}} <input type="radio" name="{{ post_type.slug }}" value="{{ term.name }}"></label> '
+                    {% endfor %}
+                    + '</p>'
+                {% endfor %}
+                + '<p><input type="text" name="fnsk_slideshow[' + index + '][supports]" value=""/></p>'
+                + '<ul class="fnsk_slideshow_radio fnsk_slideshow_radio_image"><li><input type="text" name="fnsk_slideshow['+ index + '][image][]" value="" class="fnsk_slideshow_input_image"/><a href="#" class="fnsk_slideshow_remove_image">削除</a></li><a href="#" class="fnsk_slideshow_add_image">画像を追加</a></ul>'
+                + '<a href="#" class="fnsk_slideshow_remove">このスライドショーを削除</a>'
+            + "</div>";
+
+        }
+
+        //画像出力
+        function renderImage(index){
+            return '<li>'
+                       + '<input type="text" name="fnsk_slideshow[' + index + '][image][]" value="" class="fnsk_slideshow_input_image" placeholder="画像URL" />'
+                       + '<input type="text" name="fnsk_slideshow[' + index + '][link][]" value="" class="link" placeholder="リンクURL" />'
+                       + '<a href="#" class="fnsk_slideshow_remove_image">削除</a>'
+                   + '</li>'
+                   ;
+        }
+
+    })(jQuery);
+</script>
