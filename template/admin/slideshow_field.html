@@ -112,12 +112,7 @@
 
             var images = $(this).parent().parent().find('.fnsk_slideshow_input_image');
 
-            if( images.length > 1 ){
-                $(this).parent().remove();
-            }else{
-                $(this).parent().parent().parent().remove();
-                numbering();
-            }
+            $(this).parent().remove();
 
         });
 
