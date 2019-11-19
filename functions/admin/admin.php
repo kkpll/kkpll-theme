@@ -7,6 +7,9 @@ if( !defined( 'ABSPATH') ){
 require_once THEME_DIR . '/functions/admin/plugin/admin_page.php';
 require_once THEME_DIR . '/functions/admin/plugin/dashboard.php';
 require_once THEME_DIR . '/functions/admin/plugin/slideshow.php';
+require_once THEME_DIR . '/functions/admin/plugin/breadcrumb.php';
+require_once THEME_DIR . '/functions/admin/plugin/info.php';
+
 
 
 class MyAdmin {
@@ -18,6 +21,8 @@ class MyAdmin {
         $this->plugins = array(
             'dashboard' => Dashboard::class,
             'slideshow' => Slideshow::class,
+            'breadcrumb' => Breadcrumb::class,
+            'info'       => Info::class,
         );
 
         foreach( $this->plugins as $name => $plugin ){

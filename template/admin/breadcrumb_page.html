@@ -1,0 +1,8 @@
+<div class="wrap">
+    <h1 class="wp-heading-inline">パンくずリスト設定</h1>
+    <form method="post" action="options.php">
+        {{ settings_fields( 'fnsk_breadcrumb_group' ) }}
+        {{ do_settings_sections( 'fnsk_breadcrumb' ) }}
+        {{ submit_button() }}
+    </form>
+</div>

@@ -1,0 +1,19 @@
+{% if info %}
+<div class="fnsk_info_field" data-key="{{ info.key }}">
+    <p class="fnsk_info_inputs">
+        <label>呼び出しキー</label><input type="text" name="fnsk_info[{{ info.key }}][key]" value="{{ info.key }}" class="fnsk_info_input_key" /><br>
+        <label>ラベル</label><input type="text" name="fnsk_info[{{ info.key }}][label]" value="{{ info.label }}" class="fnsk_info_input_label regular-text" /><br>
+        <label>値</label><input type="text" name="fnsk_info[{{ info.key }}][value]" value="{{ info.value }}" class="fnsk_info_input_value regular-text"/>
+    </p>
+    <p class="fnsk_info_delete"><a href="#" class="fnsk_info_delete_btn">削除する</a></p>
+</div>
+{% else %}
+<div class="fnsk_info_field" data-key="0">
+    <p class="fnsk_info_inputs">
+        <label>呼び出しキー</label><input type="text" name="fnsk_info[0][key]" value="" class="fnsk_info_input_key" /><br>
+        <label>ラベル</label><input type="text" name="fnsk_info[0][label]" value="新しい情報" class="fnsk_info_input_label regular-text" /><br>
+        <label>値</label><input type="text" name="fnsk_info[0][value]" value="" class="fnsk_info_input_value regular-text"/>
+    </p>
+    <p class="fnsk_info_delete"><a href="#" class="fnsk_info_delete_btn">削除する</a></p>
+</div>
+{% endif %}
