@@ -10,6 +10,11 @@
 
 <style>
 
+    .fnsk_info_field input{
+        height:30px;
+        border-radius:0;
+    }
+
     .fnsk_info_input_key{
         color:#007cba !important;
         font-weight:bold;
@@ -49,7 +54,7 @@
         });
 
 
-        //HTML
+        //新規作成のHTMLを出力
         function renderField(key){
             return '<tr><th scope="row">新しい情報</th><td><div class="fnsk_info_field">'
                         + '<p class="fnsk_info_inputs">'
@@ -85,6 +90,7 @@
             }
 
         });
+
 
         //削除ボタン
         $(document).on('click','.fnsk_info_delete_btn',function(e){
