@@ -6,7 +6,6 @@
  *
  */
 
-
 class Template{
 
     static $twig;
@@ -14,11 +13,8 @@ class Template{
     static function register(){
 
         if( !self::$twig ){
-
             require_once( THEME_DIR.'/lib/twig/lib/Twig/Autoloader.php' );
-
             Twig_Autoloader::register();
-
         }
 
         $loader = new Twig_Loader_Filesystem( THEME_DIR . '/template' );

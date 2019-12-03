@@ -1,12 +1,8 @@
 <?php
 
 require_once "functions/const.php"; //定数定義
-
 require_once "functions/twig.php"; //テンプレート初期化
-
 require_once "functions/admin/admin.php"; //管理画面
-
-
 
 require_once "functions/add_rewrite_rule.php";   //リライトルール追加
 require_once "functions/pre_get_posts.php";

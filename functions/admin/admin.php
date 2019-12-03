@@ -51,6 +51,9 @@ class MyAdmin {
 
         wp_localize_script( 'jquery', 'fnsk', $data );
 
+        wp_enqueue_media();
+        wp_enqueue_script( 'media-uploader.js', THEME_URL . '/js/admin/media-uploader.js', array(), filemtime( THEME_DIR . '/js/admin/media-uploader.js' ), true );
+
         foreach( $this->plugins as $name => $plugin ){
             if( method_exists( $plugin, __FUNCTION__ ) ){
                 if( $page === 'fnsk_page_fnsk_' . $name ){
