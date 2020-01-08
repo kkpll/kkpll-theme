@@ -1,0 +1,14 @@
+<div class="wrap">
+    <h1 class="wp-heading-inline">お問い合わせフォーム</h1>
+    <a href="#" id="fnsk_contactform_add" class="page-title-action">新規作成</a>
+    <form method="post" action="options.php">
+        {{ settings_fields( 'fnsk_contactform_group' ) }}
+        {{ do_settings_sections( 'fnsk_contactform' ) }}
+        {{ submit_button() }}
+    </form>
+</div>
+<style>
+    .form-part-inputs{
+        display:none;
+    }
+</style>

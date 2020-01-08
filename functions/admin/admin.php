@@ -9,7 +9,7 @@ require_once THEME_DIR . '/functions/admin/plugin/dashboard.php';
 require_once THEME_DIR . '/functions/admin/plugin/slideshow.php';
 require_once THEME_DIR . '/functions/admin/plugin/breadcrumb.php';
 require_once THEME_DIR . '/functions/admin/plugin/info.php';
-
+require_once THEME_DIR . '/functions/admin/plugin/contactform.php';
 
 
 class MyAdmin {
@@ -19,10 +19,11 @@ class MyAdmin {
     public function __construct(){
 
         $this->plugins = array(
-            'dashboard' => Dashboard::class,
-            'slideshow' => Slideshow::class,
-            'breadcrumb' => Breadcrumb::class,
-            'info'       => Info::class,
+            'dashboard'   => Dashboard::class,
+            'slideshow'   => Slideshow::class,
+            'breadcrumb'  => Breadcrumb::class,
+            'info'        => Info::class,
+            'contactform' => Contactform::class,
         );
 
         foreach( $this->plugins as $name => $plugin ){
@@ -52,6 +53,7 @@ class MyAdmin {
         wp_localize_script( 'jquery', 'fnsk', $data );
 
         wp_enqueue_media();
+        //wp_enqueue_script( 'jquery-ui-draggable' );
         wp_enqueue_script( 'media-uploader.js', THEME_URL . '/js/admin/media-uploader.js', array(), filemtime( THEME_DIR . '/js/admin/media-uploader.js' ), true );
 
         foreach( $this->plugins as $name => $plugin ){

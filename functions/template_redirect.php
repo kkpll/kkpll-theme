@@ -9,95 +9,74 @@
 add_action( 'template_redirect', 'my_template_redirect' );
 function my_template_redirect() {
 
-	$queried = get_queried_object();
-
     $template   = '';
 
     $title      = '';
-    $h1_title   = '';
     $h2_title   = '';
 
-    $posts      = array();
-	$posts      = set_posts_data($posts);
-
-	$query      = null; //ページ送り用
+	//記事取得
+	$query = null;
+    $posts = array();
+	$posts = set_posts_data( $posts, $query );
 
     //パンくずリスト
-    $breadcrumb = array();
-    array_push( $breadcrumb, array( 'name' => 'HOME', 'link' => home_url()) ); //トップページ
-
-	$breadcrumb = new CustomBreadcrumb();
+	$breadcrumb = new Breadcrumb();
+	$queried = $breadcrumb->queried;
 
 	if ( is_home() ) {
 
         $template = 'index';
         $title = 'トップページ';
 
-
 	} else if ( is_category() ) {
-
-		$breadcrumb->getTaxPageInfo();
-
-        $template = 'archive';
-
-        $title = $queried->name;
-        $h1_title = $queried->name;
-
-        global $wp_query;
-        $query = $wp_query;
-
-	} else if ( is_tag() ){
-
-		$breadcrumb->getTagPageInfo();
 
 		$template = 'archive';
 
-        $title = $queried->name;
-        $h1_title = $queried->name;
+		$breadcrumb->taxArchive();
 
-		global $wp_query;
-        $query = $wp_query;
+        $title = $queried->name;
+
+	} else if ( is_tag() ){
+
+		$template = 'archive';
+
+		$breadcrumb->tagArchive();
+
+        $title = $queried->name;
 
 	} else if( is_tax() ){
 
-		$breadcrumb->getTaxPageInfo();
+		$template = 'archive';
 
-        $template = 'archive';
+		$breadcrumb->taxArchive();
 
         $title = $queried->name;
-        $h1_title = $queried->name;
-
-        global $wp_query;
-        $query = $wp_query;
 
 	} else if ( is_post_type_archive() ) {
 
-		$breadcrumb->getPostTypePageInfo();
+		$template = 'archive';
 
-        $template = 'archive';
+		$breadcrumb->postTypeArchive();
 
         $title = $queried->label;
-        $h1_title = $queried->label;
 
 	} else if ( is_single() ) {
 
-		$breadcrumb->getSinglePageInfo();
+		$template = 'single';
 
-		$template = 'index';
+		$breadcrumb->single();
 
 		$title = $queried->post_title;
-		$h1_title = 'シングル';
 		$h2_title = $queried->post_title;
-
+		$related_posts = relatedPosts('category');
 
 	} else if ( is_page() ) {
 
-		$breadcrumb->getPagePageInfo();
+		$template = 'page';
 
-        $template = 'index';
+		$breadcrumb->page();
 
         $title = $queried->post_title;
-        $h1_title = '固定ページ';
         $h2_title = $queried->post_title;
 
 	} else if ( is_search() ) {
@@ -105,31 +84,33 @@ function my_template_redirect() {
     } else if ( is_404() ) {
 
 	    $template = '404';
+		$breadcrumb->notFound();
 
 	} else if ( is_author() || is_date() ) {
-
 	    exit();
-
 	}
 
-	//var_dump($breadcrumb->breadcrumb);
+	if(!$template){
+		$template = '404';
+	}
 
-	$template = $template ? $template : '404';
+	if(!$query){
+		global $wp_query;
+		$query = $wp_query;
+	}
 
 	global $twig;
 	echo $twig->render( $template.'.html', array(
+		'breadcrumb'=> $breadcrumb->echo(),
 		'head_title'=> $title,
-		'breadcrumb'=> $breadcrumb,
-		'h1_title'  => $h1_title,
 		'h2_title'  => $h2_title,
 		'posts'     => $posts,
 		'query'     => $query,
+		'related_posts' => isset($related_posts) ? $related_posts : null,
 		)
 	);
 
 	exit();
-
-
 
 
 }

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ head_title }}{% endblock %}
+{% block content %}
+    <main>
+        <h2>{{ h2_title }}</h2>
+        {% for post in posts %}
+            {{ post.title}} {{ post.date }}
+        {% endfor %}
+        {{ relatedPages() }}
+    </main>
+{% endblock %}
+{% block footer %}
+    {{ parent() }}
+    {% include 'footer.html' with { 'title': head_title } %}
+{% endblock %}

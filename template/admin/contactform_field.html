@@ -1,0 +1,17 @@
+{% if contactform %}
+<div class="fnsk_contactform_field" data-id="{{ contactform.id }}">
+    <p class="fnsk_contactform_inputs">
+        <label>ID</label><input type="text" name="fnsk_contactform[{{contactform.id}}][id]" value="{{contactform.id}}" />
+        <label>ラベル</label><input type="text" name="fnsk_contactform[{{contactform.id}}][label]" value="{{contactform.label}}" />
+    </p>
+    <p class="fnsk_contactform_delete"><a href="#" class="fnsk_info_delete_btn">削除する</a></p>
+</div>
+{% else %}
+<div class="fnsk_info_field" data-key="0">
+    <p class="fnsk_contactform_inputs">
+        <label>ID</label><input type="text" name="fnsk_contactform[0][id]" value="0"/>
+        <label>ラベル</label><input type="text" name="fnsk_contactform[0][label]" value="" placeholder="問い合わせフォームの名前"/>
+    </p>
+    <p class="fnsk_contactform_delete"><a href="#" class="fnsk_info_delete_btn">削除する</a></p>
+</div>
+{% endif %}

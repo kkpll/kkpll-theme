@@ -2,10 +2,20 @@
 
 {% block title %}{{ head_title }}{% endblock %}
 {% block content %}
-    <h2>{{ h2_title }}</h2>
-    {{ pagination( query ) }}
+    <main>
+        {% if posts %}
+            <ul class="posts">
+            {% for post in posts %}
+                {% include 'post.html' with { 'post': post } %}
+            {% endfor %}
+            </ul>
+            {{ pagination( query ) }}
+        {% else %}
+            {% include 'nopost.html' %}
+        {% endif %}
+    </main>
 {% endblock %}
 {% block footer %}
     {{ parent() }}
-    {% include 'footer.html' with { 'title': head_title, 'posts' : posts } %}
+    {% include 'footer.html' with { 'title': head_title } %}
 {% endblock %}
